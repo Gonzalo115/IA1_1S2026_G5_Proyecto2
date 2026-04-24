@@ -95,6 +95,8 @@ temp/
 # =========================
 # MEDIA PIPE / OPENCV TEMP
 # =========================
+handtalk/models/*.task
+*.task
 *.avi
 *.mp4
 *.mov
