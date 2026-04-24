@@ -19,7 +19,7 @@ def draw_hand_landmarks(
 
     Args:
         frame_bgr: Imagen BGR uint8 (modificada en el mismo array).
-        detection: Resultado devuelto por HandDetector.process.
+        detection: Resultado de ``hand_detection.HandDetector.process``.
     """
     if not detection.hand_landmarks:
         return
