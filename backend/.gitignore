@@ -1,0 +1,111 @@
+# =========================
+# ENTORNO VIRTUAL
+# =========================
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# PYTHON
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc.*
+*.py,cover
+*.so
+
+# =========================
+# ARCHIVOS DE COMPILACIÓN
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# CONFIGURACIÓN LOCAL
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# MODELOS Y DATOS (AJUSTAR SEGÚN PROYECTO)
+# =========================
+# Si el modelo es muy pesado, ignorarlo:
+model.pkl
+*.h5
+*.pt
+*.joblib
+
+# Si el dataset es grande:
+data/
+datasets/
+*.csv
+
+# =========================
+# LOGS
+# =========================
+*.log
+logs/
+
+# =========================
+# JUPYTER
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# IDEs / EDITORES
+# =========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# =========================
+# SISTEMA OPERATIVO
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# CACHE DE LIBRERÍAS
+# =========================
+.cache/
+pip-wheel-metadata/
+
+# =========================
+# DOCKER (opcional)
+# =========================
+*.tar
+*.gz
+
+# =========================
+# ARCHIVOS TEMPORALES
+# =========================
+tmp/
+temp/
+*.tmp
+
+# =========================
+# MEDIA PIPE / OPENCV TEMP
+# =========================
+*.avi
+*.mp4
+*.mov
+
+# =========================
+# TESTS / COVERAGE
+# =========================
+.coverage
+htmlcov/
+
+# =========================
+# CURSOR / IA TOOLS
+# =========================
+.cursor/
