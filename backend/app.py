@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from routes.handtalk_predict_routes import handtalk_predict_bp
 from routes.rostro_routes import rostro_bp
 
 # Crear instancia de Flask
@@ -10,6 +11,7 @@ CORS(app)
 
 # Registrar blueprints (rutas)
 app.register_blueprint(rostro_bp)
+app.register_blueprint(handtalk_predict_bp)
 
 
 @app.route('/', methods=['GET'])
@@ -19,7 +21,8 @@ def inicio():
         'mensaje': 'API de Detección de Rostros activa',
         'endpoints': {
             'detectar_rostro': 'POST /api/rostros/detectar (enviar imagen)',
-            'saludo': 'GET /api/rostros/saludo'
+            'saludo': 'GET /api/rostros/saludo',
+            'predict_manos': 'GET /predict (webcam + InferenceService)',
         }
     }
 

@@ -65,9 +65,12 @@ class InferenceService:
         Pipeline: MediaPipe → vector 63 → ``predict`` → suavizado.
 
         Returns:
-            ``{"raw": ..., "stable": ...}`` con la etiqueta cruda y la suavizada.
+            ``{"raw": ..., "stable": ...}`` o ``{"error": "No hand detected"}``.
         """
         detection = self._detector.process(frame, self._elapsed_ms())
+        if not detection.hand_landmarks:
+            return {"error": "No hand detected"}
+
         features = hand_landmarker_result_to_feature_vector(
             detection, num_hand_slots=_NUM_HAND_SLOTS
         )
