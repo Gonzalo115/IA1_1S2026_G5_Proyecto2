@@ -10,7 +10,7 @@ Integración ML típica::
         det = HandDetector()
         ok, frame = cam.read()
         out = det.process(frame, timestamp_ms=0)
-        x = hand_landmarker_result_to_feature_vector(out)  # (126,) float32
+        x = hand_landmarker_result_to_feature_vector(out, num_hand_slots=1)  # (63,) float32
         det.close()
 """
 
