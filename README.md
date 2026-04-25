@@ -104,6 +104,7 @@ El código HTTP es **200** en todos los casos anteriores.
 
 ## Documentación adicional
 
+- Guía de ejecución del backend: [`RUN_BACKEND.md`](RUN_BACKEND.md)
 - Detalle de endpoints y estructura de carpetas: [`backend/README_API.md`](backend/README_API.md)
 - Frontend: [`frontend/README.md`](frontend/README.md)
 
