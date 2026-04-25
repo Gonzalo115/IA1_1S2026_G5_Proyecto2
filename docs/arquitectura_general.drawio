@@ -1,0 +1,84 @@
+<mxfile host="app.diagrams.net" agent="Codex">
+  <diagram id="arquitectura-general" name="Arquitectura General">
+    <mxGraphModel dx="1373" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#1F2937;" value="Arquitectura General del Sistema" vertex="1">
+          <mxGeometry height="40" width="530" x="300" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontSize=16;fontStyle=1;" value="Usuario" vertex="1">
+          <mxGeometry height="70" width="140" x="30" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontColor=#0C4A6E;fontSize=15;fontStyle=1;" value="Navegador Web&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Permiso de camara&lt;br&gt;getUserMedia&lt;/span&gt;" vertex="1">
+          <mxGeometry height="110" width="170" x="260" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#14532D;fontSize=15;fontStyle=1;" value="Frontend&lt;br&gt;React + TypeScript + Vite&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;frontend/src/App.tsx&lt;/span&gt;" vertex="1">
+          <mxGeometry height="110" width="210" x="500" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="backend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#78350F;fontSize=15;fontStyle=1;" value="Backend API&lt;br&gt;Flask + Flask-CORS&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;backend/app.py&lt;/span&gt;" vertex="1">
+          <mxGeometry height="110" width="210" x="900" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="response" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE7F3;strokeColor=#DB2777;fontColor=#831843;fontSize=15;fontStyle=1;" value="Resultado en pantalla&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Cantidad de rostros&lt;br&gt;Mensaje de estado&lt;/span&gt;" vertex="1">
+          <mxGeometry height="100" width="210" x="330" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="routes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontSize=14;fontStyle=1;" value="Rutas&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;routes/rostro_routes.py&lt;br&gt;POST /api/rostros/detectar&lt;/span&gt;" vertex="1">
+          <mxGeometry height="90" width="210" x="900" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="controller" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontSize=14;fontStyle=1;" value="Controlador&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;controllers/rostro_controller.py&lt;br&gt;Valida y decodifica imagen&lt;/span&gt;" vertex="1">
+          <mxGeometry height="90" width="210" x="900" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="service" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontSize=14;fontStyle=1;" value="Servicio OpenCV&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;services/rostros_services.py&lt;br&gt;Haar Cascade&lt;/span&gt;" vertex="1">
+          <mxGeometry height="90" width="210" x="900" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="canvas" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;fontColor=#064E3B;fontSize=14;fontStyle=1;" value="Captura de frame&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Canvas oculto&lt;br&gt;Imagen JPEG cada 0.5s&lt;/span&gt;" vertex="1">
+          <mxGeometry height="90" width="210" x="500" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-browser" edge="1" parent="1" source="user" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#374151;fontColor=#374151;" target="browser" value="usa">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-browser-frontend" edge="1" parent="1" source="browser" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#374151;fontColor=#374151;" target="frontend" value="muestra video">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-frontend-canvas" edge="1" parent="1" source="frontend" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#16A34A;fontColor=#166534;" target="canvas" value="captura frames">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-canvas-backend" edge="1" parent="1" source="canvas" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#2563EB;fontColor=#1D4ED8;" target="backend" value="FormData: imagen">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="745" y="470" />
+              <mxPoint x="820" y="470" />
+              <mxPoint x="820" y="265" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-backend-routes" edge="1" parent="1" source="backend" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#D97706;fontColor=#92400E;" target="routes" value="registra blueprint">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-routes-controller" edge="1" parent="1" source="routes" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#D97706;fontColor=#92400E;" target="controller" value="llama endpoint">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-controller-service" edge="1" parent="1" source="controller" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#D97706;fontColor=#92400E;" target="service" value="envia imagen procesable">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-service-response" edge="1" parent="1" source="service" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#DB2777;fontColor=#9D174D;" target="response" value="JSON: exito, cantidad, coordenadas">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="895" y="760" />
+              <mxPoint x="605" y="760" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-response-frontend" edge="1" parent="1" source="response" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#DB2777;fontColor=#9D174D;" target="frontend" value="actualiza estado visual">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="570" />
+              <mxPoint x="435" y="360" />
+              <mxPoint x="480" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

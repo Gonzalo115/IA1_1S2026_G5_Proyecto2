@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Codex">
+  <diagram id="arquitectura-sistema-general" name="Arquitectura Sistema General">
+    <mxGraphModel dx="1373" dy="749" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#111827;" value="Arquitectura General del Sistema" vertex="1">
+          <mxGeometry height="40" width="540" x="460" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontSize=15;fontStyle=1;" value="Usuario final&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Usa la aplicacion&lt;br&gt;y concede camara&lt;/span&gt;" vertex="1">
+          <mxGeometry height="100" width="170" x="60" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontColor=#374151;fontSize=15;fontStyle=1;dashed=1;" value="Administrador&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Modulo administrativo&lt;br&gt;pendiente&lt;/span&gt;" vertex="1">
+          <mxGeometry height="100" width="170" x="1045" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#14532D;fontSize=15;fontStyle=1;" value="Aplicacion Web&lt;br&gt;Frontend&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;React + TypeScript + Vite&lt;br&gt;Camara y visualizacion&lt;/span&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="315" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="adminModule" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontColor=#374151;fontSize=15;fontStyle=1;dashed=1;" value="Modulo Administrativo&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Estructura requerida&lt;br&gt;pendiente de implementar&lt;/span&gt;" vertex="1">
+          <mxGeometry height="110" width="220" x="1020" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#78350F;fontSize=15;fontStyle=1;" value="API Backend&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Flask + Flask-CORS&lt;br&gt;Recepcion de imagenes&lt;/span&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="745" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="recognition" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontSize=15;fontStyle=1;" value="Modulo de Reconocimiento Visual&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;OpenCV + NumPy&lt;br&gt;Base actual: deteccion de rostros&lt;br&gt;Objetivo: reconocimiento basico de senas&lt;/span&gt;" vertex="1">
+          <mxGeometry height="140" width="250" x="730" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="docker" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontColor=#0C4A6E;fontSize=15;fontStyle=1;" value="Contenerizacion&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Dockerfile frontend&lt;br&gt;Dockerfile backend&lt;br&gt;docker-compose pendiente&lt;/span&gt;" vertex="1">
+          <mxGeometry height="130" width="180" x="520" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="json" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE7F3;strokeColor=#DB2777;fontColor=#831843;fontSize=14;fontStyle=1;" value="Respuesta JSON&lt;br&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;exito&lt;br&gt;cantidad detectada&lt;br&gt;coordenadas&lt;/span&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="745" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#374151;fontColor=#374151;" target="frontend" value="interactua">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="frontend" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#16A34A;fontColor=#166534;" target="api" value="captura y envia frames">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="api" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#D97706;fontColor=#92400E;" target="recognition" value="procesa imagen">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="recognition" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#DB2777;fontColor=#9D174D;" target="json" value="genera resultado">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="json" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#DB2777;fontColor=#9D174D;" target="frontend" value="devuelve resultado">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="730" />
+              <mxPoint x="630" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="admin" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#6B7280;fontColor=#4B5563;dashed=1;" target="adminModule" value="gestiona">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="adminModule" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#6B7280;fontColor=#4B5563;dashed=1;" target="api" value="se integrara con API">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="950" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="docker" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#0284C7;fontColor=#0C4A6E;entryX=0.429;entryY=0.041;entryDx=0;entryDy=0;entryPerimeter=0;" target="frontend" value="empaqueta servicios">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="docker" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#0284C7;fontColor=#0C4A6E;" target="api" value="empaqueta API">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="790" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
