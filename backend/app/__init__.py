@@ -1,1 +1,0 @@
-"""Aplicación FastAPI HandTalk."""
