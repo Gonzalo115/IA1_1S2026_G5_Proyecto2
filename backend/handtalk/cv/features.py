@@ -93,7 +93,7 @@ def multi_hand_landmarks_to_feature_vector(
 def hand_landmarker_result_to_feature_vector(
     result: hand_landmarker.HandLandmarkerResult,
     *,
-    num_hand_slots: int = 2,
+    num_hand_slots: int = 1,
     eps: float = 1e-8,
 ) -> np.ndarray:
     """

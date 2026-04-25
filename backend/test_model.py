@@ -1,100 +1,56 @@
 import time
+import cv2
 import joblib
-from collections import Counter
 
 from handtalk.cv import WebcamCapture, HandDetector
 from handtalk.cv.features import hand_landmarker_result_to_feature_vector
+from handtalk.smoother import ModeSmoothingWindow
 
-# =========================
-
-# CONFIGURACIÓN
-
-# =========================
 
 MODEL_PATH = "models/modelo_manos.pkl"
-HISTORY_SIZE = 10  # tamaño de ventana para suavizado
-
-# =========================
-
-# CARGAR MODELO
-
-# =========================
 
 model = joblib.load(MODEL_PATH)
 
-# =========================
-
-# INICIALIZAR
-
-# =========================
-
 start_time = time.time()
-history = []
+smoother = ModeSmoothingWindow(window_size=10)
 
-# =========================
+try:
+    with WebcamCapture(0) as cam:
+        detector = HandDetector()
 
-# LOOP PRINCIPAL
+        while True:
+            ok, frame = cam.read()
+            if not ok:
+                break
 
-# =========================
+            timestamp_ms = int((time.time() - start_time) * 1000)
+            result = detector.process(frame, timestamp_ms=timestamp_ms)
 
-with WebcamCapture(0) as cam:
-detector = HandDetector()
+            features = hand_landmarker_result_to_feature_vector(
+                result,
+                num_hand_slots=1
+            )
 
-```
-while True:
-    ok, frame = cam.read()
-    if not ok:
-        break
+            if len(features) != 63:
+                print("Error en features:", len(features))
+                continue
 
-    # Timestamp correcto (monotónico)
-    timestamp_ms = int((time.time() - start_time) * 1000)
+            raw_prediction = model.predict([features])[0]
 
-    # Detección
-    result = detector.process(frame, timestamp_ms=timestamp_ms)
+            # convertir numpy a tipo normal si aplica
+            try:
+                raw_prediction = raw_prediction.item()
+            except:
+                pass
 
-    # Features (63 valores, 1 mano)
-    features = hand_landmarker_result_to_feature_vector(
-        result,
-        num_hand_slots=1
-    )
+            stable_prediction = smoother.update(raw_prediction)
 
-    # Validación de longitud
-    if len(features) != 63:
-        print("⚠️ Error: tamaño de features incorrecto:", len(features))
-        continue
+            print(f"Raw: {raw_prediction} | Estable: {stable_prediction}")
 
-    # Predicción
-    prediction = model.predict([features])[0]
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
-    # Probabilidades (confianza)
-    try:
-        proba = model.predict_proba([features])[0]
-        confidence = max(proba)
-    except:
-        confidence = 0.0
+        detector.close()
 
-    # =========================
-    # SUAVIZADO
-    # =========================
-    history.append(prediction)
-
-    if len(history) > HISTORY_SIZE:
-        history.pop(0)
-
-    final_prediction = Counter(history).most_common(1)[0][0]
-
-    # =========================
-    # SALIDA
-    # =========================
-    print(
-        f"Predicción: {prediction} | "
-        f"Estable: {final_prediction} | "
-        f"Confianza: {confidence:.2f}"
-    )
-
-    # Salir con tecla 'q'
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-detector.close()
-```
+finally:
+    cv2.destroyAllWindows()
