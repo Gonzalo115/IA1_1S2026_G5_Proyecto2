@@ -1,198 +1,142 @@
-# API de Detección de Rostros
+# API HandTalk / Backend Flask
 
 ## Descripción
 
-API Flask para detectar rostros en imágenes usando OpenCV y Haar Cascades.
+Servidor **Flask** que expone:
 
-## Arquitectura de Capas
+- Detección de **rostros** en imágenes (OpenCV + Haar Cascades).
+- Predicción de **gestos de mano** vía webcam del servidor (`GET /predict`), usando el módulo **HandTalk** (MediaPipe, features, modelo entrenado y suavizado de etiquetas).
+
+## Arquitectura
 
 ```
-app.py (Configuración de Flask)
-  ↓
-routes/ (Definición de endpoints)
-  ↓
-controllers/ (Lógica de requests)
-  ↓
-services/ (Lógica de negocio - Detección de rostros)
+app.py                    # Aplicación Flask, CORS, registro de blueprints,
+                          # ruta GET /, instancia única de InferenceService
+    ↓
+routes/                 # Blueprints y rutas HTTP
+    ├── rostro_routes   →  controllers/  →  services/rostros_services
+    └── predict_routes  →  services/predict_service  (usa InferenceService)
+    ↓
+handtalk/               # Dominio HandTalk (independiente del framework web)
+    ├── cv/             # Cámara, detección de manos (MediaPipe), features, dibujo
+    ├── inference_service.py
+    └── smoother.py
 ```
+
+| Capa | Rol |
+|------|-----|
+| **`app.py`** | Crea `Flask`, habilita CORS, instancia **`InferenceService`** una sola vez, registra **`PredictService`** en `app.extensions`, registra blueprints y define `GET /`. |
+| **`routes/`** | Blueprints: prefijo `/api/rostros` (rostros) y rutas de predicción (`GET /predict`). |
+| **`controllers/`** | Validación y orquestación HTTP para **rostros** (no se usa en la ruta de predicción). |
+| **`services/`** | Lógica de negocio: detección de rostros; captura de frame + delegación a **`InferenceService`**. |
+| **`handtalk/cv/`** | Visión: `WebcamCapture`, `HandDetector` (MediaPipe Tasks), extracción de vector de features fijo, utilidades de dibujo. |
+
+El modelo sklearn por defecto se espera en **`models/modelo_manos.pkl`** (ruta relativa a la carpeta `backend`). El modelo MediaPipe de manos se resuelve con `handtalk/cv/model_path.py` (descarga automática la primera vez si aplica).
 
 ## Instalación
 
-1. **Instalar dependencias:**
-
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 
-2. **Ejecutar la API:**
+## Ejecución
 
 ```bash
+cd backend
 python app.py
 ```
 
-La API estará disponible en `http://localhost:5000`
+Servidor por defecto: **`http://0.0.0.0:5000`** (acceso local típico: `http://127.0.0.1:5000`).
 
 ## Endpoints
 
-### 1. **GET /api/rostros/saludo**
+### `GET /`
 
-Verifica que el módulo de detección está activo.
+Comprueba que la API está activa y lista rutas útiles.
 
-**Respuesta:**
+**Respuesta (JSON):** objeto con `mensaje` y `endpoints` (claves descriptivas y rutas).
+
+---
+
+### `GET /api/rostros/saludo`
+
+Comprueba que el submódulo de rostros responde.
+
+**Respuesta (JSON):**
 
 ```json
 {
-  "mensaje": "Módulo de detección de rostros activo ✅"
+  "mensaje": "Módulo de detección de rostros activo"
 }
 ```
 
 ---
 
-### 2. **POST /api/rostros/detectar**
+### `POST /api/rostros/detectar`
 
-Detecta rostros en una imagen.
+Detecta rostros en una imagen enviada en **multipart**.
 
-**Parámetros:**
+**Formulario:** campo de archivo **`imagen`** (JPEG, PNG, etc.).
 
-- `imagen` (file, requerido): La imagen a procesar (jpg, png, etc)
+**Respuesta exitosa:** JSON con `exito`, `cantidad_rostros`, `rostros` (lista de rectángulos `x`, `y`, `ancho`, `alto`) y `mensaje`.
 
-**Respuesta exitosa (200):**
-
-```json
-{
-  "exito": true,
-  "cantidad_rostros": 2,
-  "rostros": [
-    {
-      "x": 150,
-      "y": 100,
-      "ancho": 100,
-      "alto": 120
-    },
-    {
-      "x": 400,
-      "y": 150,
-      "ancho": 95,
-      "alto": 115
-    }
-  ],
-  "mensaje": "Se detectaron 2 rostro(s)"
-}
-```
-
-**Respuesta con error (400/500):**
-
-```json
-{
-  "exito": false,
-  "mensaje": "Descripción del error"
-}
-```
+**Errores:** JSON con `exito: false` y `mensaje`; códigos HTTP 400 o 500 según el caso.
 
 ---
 
-## Ejemplo de Uso con cURL
+### `GET /predict`
 
-```bash
-curl -X POST \
-  -F "imagen=@ruta/a/imagen.jpg" \
-  http://localhost:5000/api/rostros/detectar
-```
+Captura **un frame** de la webcam del **equipo donde corre el servidor**, ejecuta el pipeline HandTalk (MediaPipe → features → modelo → suavizado) y devuelve el resultado.
 
-## Ejemplo de Uso con Python
+**Respuestas (JSON):**
 
-```python
-import requests
+| Situación | Cuerpo |
+|-----------|--------|
+| Predicción válida | `{"raw": "<etiqueta>", "stable": "<etiqueta>"}` (tipos según el modelo). |
+| Sin frame de cámara | `{"error": "No frame captured"}` |
+| Sin mano detectada | `{"error": "No hand detected"}` |
 
-# Detectar rostros
-with open('imagen.jpg', 'rb') as f:
-    files = {'imagen': f}
-    response = requests.post(
-        'http://localhost:5000/api/rostros/detectar',
-        files=files
-    )
-
-print(response.json())
-```
-
-## Ejemplo de Uso con JavaScript/Fetch
-
-```javascript
-const formData = new FormData();
-formData.append("imagen", imagenFile); // imagenFile es el File object
-
-fetch("http://localhost:5000/api/rostros/detectar", {
-  method: "POST",
-  body: formData,
-})
-  .then((response) => response.json())
-  .then((data) => console.log(data));
-```
+Las respuestas se envían con código HTTP **200** y cuerpo JSON (incluidos los objetos con `error`).
 
 ---
 
-## Estructura de Archivos
+## Estructura de carpetas (backend)
 
 ```
 backend/
-├── app.py                     # Configuración de Flask
-├── requirements.txt           # Dependencias
+├── app.py
+├── requirements.txt
+├── models/
+│   └── modelo_manos.pkl          # Modelo sklearn (debe existir para /predict)
 ├── controllers/
-│   ├── __init__.py
-│   └── rostro_controller.py  # Controlador de rostros
+│   └── rostro_controller.py
 ├── routes/
-│   ├── __init__.py
-│   └── rostro_routes.py      # Definición de rutas
+│   ├── rostro_routes.py
+│   └── predict_routes.py
 ├── services/
-│   ├── __init__.py
-│   └── rostros.services.py   # Lógica de detección
-├── middleware/               # Para futuras middleware
-├── repositories/             # Para futuras bases de datos
-└── README.md                 # Este archivo
+│   ├── rostros_services.py
+│   └── predict_service.py
+└── handtalk/
+    ├── inference_service.py
+    ├── smoother.py
+    └── cv/
+        ├── camera.py
+        ├── hand_detection.py
+        ├── features.py
+        ├── landmark_drawing.py
+        ├── model_path.py
+        └── webcam_app.py          # Demo por consola (opcional)
 ```
 
----
+## Dependencias principales
 
-## Cómo Funciona
-
-1. El usuario envía una **imagen** al endpoint `/api/rostros/detectar`
-2. El **controller** recibe la solicitud y valida la imagen
-3. El **controller** llama al **service** pasando la imagen
-4. El **service** utiliza OpenCV (cv2) y Haar Cascades para detectar rostros
-5. El **service** retorna las coordenadas y cantidad de rostros detectados
-6. El **controller** retorna el resultado en JSON al usuario
-
----
-
-## Línea de Ejecución
-
-```
-request.files['imagen']
-    ↓
-RostroController.detectar_rostro_endpoint()
-    ↓
-RostrosService.detectar_rostros(imagen_array)
-    ↓
-cv2.CascadeClassifier.detectMultiScale()
-    ↓
-Retorna: {rostros: [coordenadas], cantidad_rostros: n}
-    ↓
-JSON Response
-```
-
----
-
-## Dependencias
-
-- **Flask**: Framework web
-- **Flask-CORS**: Manejo de CORS para requests desde frontend
-- **opencv-python**: Visión computacional y detección de rostros
-- **numpy**: Procesamiento de arrays numéricos
-
----
+- **Flask**, **Flask-CORS**: API HTTP.
+- **OpenCV**: imágenes, webcam, Haar Cascades (rostros).
+- **MediaPipe**: detección de manos (Tasks API).
+- **NumPy**, **scikit-learn**, **joblib**: features y modelo.
 
 ## Notas
 
-- La detección usa **Haar Cascades** que ya aprendió a reconocer rostros
-- El print "🔍 Se está detectando rostro..." aparecerá en la consola cuando se procese una imagen
-- La API está lista para escalar con más modelos de detección en el futuro
+- **`GET /predict`** depende de que exista **webcam en el servidor** y del fichero **`models/modelo_manos.pkl`**.
+- El cliente frontend que envía imágenes por POST usa **`POST /api/rostros/detectar`**; no es el mismo flujo que **`GET /predict`**.
