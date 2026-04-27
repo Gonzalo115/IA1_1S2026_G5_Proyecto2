@@ -1,0 +1,12 @@
+{
+    "confidence_threshold": 0.85,
+    "telegram_enabled": true,
+    "telegram_message_format": "Se detectó la seña: {prediction} con confianza {confidence}",
+    "available_signs": [
+        "hola",
+        "gracias",
+        "si",
+        "no"
+    ],
+    "message_history": []
+}
