@@ -1,12 +1,30 @@
 {
-    "confidence_threshold": 0.85,
     "telegram_enabled": true,
-    "telegram_message_format": "Se detectó la seña: {prediction} con confianza {confidence}",
-    "available_signs": [
-        "hola",
-        "gracias",
-        "si",
-        "no"
-    ],
-    "message_history": []
+    "telegram_message_format": "HandTalk AI detecto: {prediction} | confianza: {confidence}",
+    "message_history": [
+        {
+            "prediction": "hola",
+            "confidence": 0.95,
+            "message": "Se detectó la seña: hola",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T00:18:18.706249"
+        },
+        {
+            "prediction": "hola",
+            "confidence": 0.95,
+            "message": "Se detectó la seña: hola",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T00:18:31.687495"
+        },
+        {
+            "prediction": "hola",
+            "confidence": 0.95,
+            "message": "HandTalk AI detecto: hola | confianza: 0.95",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T00:20:30.432506"
+        }
+    ]
 }

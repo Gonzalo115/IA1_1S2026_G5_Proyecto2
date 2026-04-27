@@ -14,10 +14,8 @@ class AdminService:
         config = self.get_config()
 
         allowed_fields = [
-            "confidence_threshold",
             "telegram_enabled",
-            "telegram_message_format",
-            "available_signs"
+            "telegram_message_format"
         ]
 
         for field in allowed_fields:
@@ -28,10 +26,6 @@ class AdminService:
             json.dump(config, file, indent=4, ensure_ascii=False)
 
         return config
-
-    def get_available_signs(self):
-        config = self.get_config()
-        return config.get("available_signs", [])
 
     def get_history(self):
         config = self.get_config()
