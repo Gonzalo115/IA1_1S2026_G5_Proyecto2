@@ -5,6 +5,7 @@ from handtalk.inference_service import InferenceService
 from routes.predict_routes import predict_bp
 from routes.rostro_routes import rostro_bp
 from services.predict_service import PredictService
+from routes.admin_routes import admin_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +16,7 @@ app.extensions["predict_service"] = PredictService(inference_service)
 
 app.register_blueprint(rostro_bp)
 app.register_blueprint(predict_bp)
-
+app.register_blueprint(admin_bp)
 
 @app.route("/", methods=["GET"])
 def inicio():
