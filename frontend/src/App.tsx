@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-interface FaceDetectionResult {
+interface HandDetectionResult {
   exito: boolean;
-  cantidad_rostros: number;
-  rostros: Array<{ x: number; y: number; ancho: number; alto: number }>;
+  prediccion: string | null;
+  confianza: number | null;
+  confianzas_por_clase: Record<string, number>;
   mensaje: string;
+  manos_detectadas: number;
 }
 
 function App() {
@@ -14,8 +16,9 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [detectionResult, setDetectionResult] =
-    useState<FaceDetectionResult | null>(null);
+    useState<HandDetectionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTraining, setIsTraining] = useState(false);
 
   // Inicializar cámara
   useEffect(() => {
@@ -71,7 +74,7 @@ function App() {
           try {
             setIsLoading(true);
             const response = await fetch(
-              "http://localhost:5000/api/rostros/detectar",
+              "http://localhost:5000/api/manos/analizar",
               {
                 method: "POST",
                 body: formData,
@@ -96,6 +99,36 @@ function App() {
 
     return () => clearInterval(interval);
   }, [cameraActive]);
+
+  // Función para entrenar el modelo
+  const entrenarModelo = async () => {
+    try {
+      setIsTraining(true);
+      const formData = new FormData();
+      formData.append("ruta_dataset", "data");
+
+      const response = await fetch("http://localhost:5000/api/manos/entrenar", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert(
+          `✅ Entrenamiento completado!\n\nAccuracy: ${(result.accuracy * 100).toFixed(2)}%\nMuestras: ${result.total_muestras}\nClasificaciones: ${result.etiquetas.join(", ")}`,
+        );
+        console.log("Resultado del entrenamiento:", result);
+      } else {
+        const error = await response.json();
+        alert(`❌ Error: ${error.mensaje}`);
+      }
+    } catch (error) {
+      console.error("Error al entrenar:", error);
+      alert(`❌ Error al entrenar: ${error}`);
+    } finally {
+      setIsTraining(false);
+    }
+  };
 
   return (
     <>
@@ -144,26 +177,38 @@ function App() {
               {cameraActive ? (
                 <>
                   <p style={{ color: "#00d9ff", fontWeight: "bold" }}>
-                    📷 Cámara activa
+                    ✋ Cámara activa - Detectando manos
                   </p>
                   {detectionResult && (
                     <div style={{ textAlign: "left", marginTop: "10px" }}>
-                      <p style={{ color: "#00ff00", margin: "5px 0" }}>
-                        ✅ Rostros detectados:{" "}
-                        {detectionResult.cantidad_rostros}
-                      </p>
-                      <p
-                        style={{
-                          color: "#888",
-                          margin: "5px 0",
-                          fontSize: "12px",
-                        }}
-                      >
-                        {detectionResult.mensaje}
-                      </p>
+                      {detectionResult.exito ? (
+                        <>
+                          <p style={{ color: "#00ff00", margin: "5px 0" }}>
+                            ✅ Seña detectada:{" "}
+                            <strong>{detectionResult.prediccion}</strong>
+                          </p>
+                          <p style={{ color: "#ffaa00", margin: "5px 0" }}>
+                            📊 Confianza:{" "}
+                            {(detectionResult.confianza! * 100).toFixed(2)}%
+                          </p>
+                          <p
+                            style={{
+                              color: "#888",
+                              margin: "5px 0",
+                              fontSize: "12px",
+                            }}
+                          >
+                            {detectionResult.mensaje}
+                          </p>
+                        </>
+                      ) : (
+                        <p style={{ color: "#ff6b6b", margin: "5px 0" }}>
+                          ⚠️ {detectionResult.mensaje}
+                        </p>
+                      )}
                       {isLoading && (
                         <p style={{ color: "#ffaa00", margin: "5px 0" }}>
-                          ⏳ Procesando...
+                          ⏳ Analizando...
                         </p>
                       )}
                     </div>
@@ -179,18 +224,48 @@ function App() {
         </div>
 
         <div>
-          <h1>Detector de Rostros</h1>
+          <h1>Detector de Señas de Mano (1-10)</h1>
           <p>
-            La cámara envía frames cada <code>0.5 segundos</code> al backend
+            La cámara envía frames cada <code>0.5 segundos</code> para analizar
+            la seña
           </p>
         </div>
 
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            gap: "10px",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
         >
-          Count is {count}
-        </button>
+          <button
+            className="counter"
+            onClick={() => setCount((count) => count + 1)}
+            style={{ opacity: isTraining ? 0.5 : 1 }}
+          >
+            Count is {count}
+          </button>
+
+          <button
+            onClick={entrenarModelo}
+            disabled={isTraining}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: isTraining ? "#666" : "#00d9ff",
+              color: "#000",
+              border: "none",
+              borderRadius: "5px",
+              cursor: isTraining ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              fontSize: "14px",
+              transition: "0.3s",
+            }}
+          >
+            {isTraining ? "⏳ Entrenando..." : "🤖 Entrenar Modelo"}
+          </button>
+        </div>
       </section>
 
       <div className="ticks"></div>
@@ -200,15 +275,17 @@ function App() {
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#documentation-icon"></use>
           </svg>
-          <h2>Estado de la Conexión</h2>
-          <p>Backend: http://localhost:5000</p>
+          <h2>📚 Información del Sistema</h2>
+          <p>Detector de Señas (1-10) con MediaPipe</p>
           <ul>
             <li>
-              <a
-                href="http://localhost:5000/api/rostros/saludo"
-                target="_blank"
-              >
-                Verificar Backend
+              <a href="http://localhost:5000/api/manos/saludo" target="_blank">
+                ✓ Verificar Backend
+              </a>
+            </li>
+            <li>
+              <a href="http://localhost:5000/" target="_blank">
+                ✓ Ver Endpoints
               </a>
             </li>
           </ul>
