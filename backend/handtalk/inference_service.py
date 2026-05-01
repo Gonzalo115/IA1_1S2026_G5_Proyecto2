@@ -45,7 +45,14 @@ class InferenceService:
         if not path.is_file():
             raise FileNotFoundError(f"No se encontró el modelo: {path}")
 
-        self._model = joblib.load(path)
+        paquete = joblib.load(path)
+
+        if isinstance(paquete, dict) and "modelo" in paquete:
+            self._model = paquete["modelo"]
+            self._metadata = paquete.get("metadata", {})
+        else:
+            self._model = paquete
+            self._metadata = {}
         det_cfg = hand_detector_config or HandDetectorConfig(num_hands=_NUM_HAND_SLOTS)
         if det_cfg.num_hands != _NUM_HAND_SLOTS:
             raise ValueError(
