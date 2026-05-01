@@ -1,6 +1,8 @@
 {
     "telegram_enabled": true,
     "telegram_message_format": "HandTalk AI detecto: {prediction} | confianza: {confidence}",
+    "confidence_threshold": 0.5,
+    "available_signs": ["hola", "adios", "1", "2", "3", "4", "5"],
     "message_history": [
         {
             "prediction": "hola",

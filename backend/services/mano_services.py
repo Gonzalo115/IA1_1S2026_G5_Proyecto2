@@ -95,6 +95,12 @@ class ManoService:
             
             # Procesar la mano detectada
             mano = resultado.multi_hand_landmarks[0]
+
+            # Coordenadas normalizadas de los 21 landmarks para el frontend
+            landmarks = [
+                {"x": float(lm.x), "y": float(lm.y)}
+                for lm in mano.landmark
+            ]
             
             # Extraer puntos (21 landmarks * 3 = 63 valores)
             puntos = self.normalizar_landmarks(mano)
@@ -121,7 +127,8 @@ class ManoService:
                 'confianza': confianza_max,
                 'confianzas_por_clase': confianzas_dict,
                 'mensaje': f'Seña detectada: {prediccion}',
-                'manos_detectadas': len(resultado.multi_hand_landmarks)
+                'manos_detectadas': len(resultado.multi_hand_landmarks),
+                'landmarks': landmarks
             }
         
         except Exception as e:

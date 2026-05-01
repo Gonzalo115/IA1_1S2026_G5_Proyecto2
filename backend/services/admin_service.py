@@ -15,7 +15,9 @@ class AdminService:
 
         allowed_fields = [
             "telegram_enabled",
-            "telegram_message_format"
+            "telegram_message_format",
+            "confidence_threshold",
+            "available_signs",
         ]
 
         for field in allowed_fields:
