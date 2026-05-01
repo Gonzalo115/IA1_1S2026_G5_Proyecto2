@@ -45,8 +45,11 @@ class HandDetector:
         self._config = config or HandDetectorConfig()
         model_path = self._config.model_path or resolve_hand_landmarker_model_path()
 
+        with open(model_path, "rb") as f:
+            model_buffer = f.read()
+
         options = _HandLandmarkerOptions(
-            base_options=_BaseOptions(model_asset_path=model_path),
+            base_options=_BaseOptions(model_asset_buffer=model_buffer),
             running_mode=_RunningMode.VIDEO,
             num_hands=self._config.num_hands,
             min_hand_detection_confidence=self._config.min_hand_detection_confidence,

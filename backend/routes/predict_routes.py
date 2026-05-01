@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, jsonify
 
 from services.predict_service import PredictService
 from services.telegram_service import TelegramService
+from controllers.mano_controller import mano_controller
 
 predict_bp = Blueprint("predict", __name__)
 
@@ -31,3 +32,15 @@ def predict():
         result["telegram"] = telegram_result
 
     return jsonify(result), 200
+
+@predict_bp.route('/analizar', methods=['POST'])
+def analizar_mano():
+    """
+    POST /analizar
+    
+    Analiza una seña de mano en una imagen
+    
+    Parámetros:
+        - imagen (file): La imagen con la mano
+    """
+    return mano_controller.analizar_mano_endpoint()

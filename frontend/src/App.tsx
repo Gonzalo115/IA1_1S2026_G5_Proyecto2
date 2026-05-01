@@ -73,13 +73,10 @@ function App() {
 
           try {
             setIsLoading(true);
-            const response = await fetch(
-              "http://localhost:5000/api/manos/analizar",
-              {
-                method: "POST",
-                body: formData,
-              },
-            );
+            const response = await fetch("http://localhost:5000/analizar", {
+              method: "POST",
+              body: formData,
+            });
 
             if (response.ok) {
               const result = await response.json();

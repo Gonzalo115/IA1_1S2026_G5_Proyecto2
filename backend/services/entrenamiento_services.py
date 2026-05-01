@@ -18,8 +18,10 @@ class EntrenaciontoService:
 
     def __init__(self):
         self.modelo = None
-        self.modelo_path = "./models/modelo_manos.pkl"
-        self.hand_landmarker_path = "models/hand_landmarker.task"
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        self.modelo_path = os.path.join(base_dir, "models", "modelo_manos.pkl")
+        self.hand_landmarker_path = os.path.join(base_dir, "models", "hand_landmarker.task")
 
         if not os.path.exists("./models"):
             os.makedirs("./models")
@@ -27,8 +29,11 @@ class EntrenaciontoService:
         if not os.path.exists(self.hand_landmarker_path):
             print(f"No se encontró el modelo de MediaPipe: {self.hand_landmarker_path}")
 
+        with open(self.hand_landmarker_path, "rb") as f:
+            model_buffer = f.read()
+
         base_options = python.BaseOptions(
-            model_asset_path=self.hand_landmarker_path
+            model_asset_buffer=model_buffer
         )
 
         options = vision.HandLandmarkerOptions(
