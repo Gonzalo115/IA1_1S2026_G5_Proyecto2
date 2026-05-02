@@ -1,0 +1,327 @@
+.admin-module {
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ===== SENAS SECTION ===== */
+.senas-section-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.senas-section-header {
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.senas-section-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.senas-section-header p {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 3px;
+}
+
+/* Hide the module-header inside SenasModule when embedded */
+.senas-section-wrapper .senas-module > .module-header {
+  display: none;
+}
+
+.senas-section-wrapper .senas-module {
+  max-width: 100%;
+}
+
+/* ===== LOGIN ===== */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78vh;
+}
+
+.login-card {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.login-logo {
+  width: 52px;
+  height: 52px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.login-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.login-error {
+  font-size: 13px;
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+}
+
+.login-hint {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ===== TOP GRID ===== */
+.admin-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ===== THRESHOLD ===== */
+.threshold-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.threshold-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+/* ===== SIGNS TILES GRID ===== */
+.signs-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.sign-admin-tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-border);
+  gap: 6px;
+}
+
+.sign-admin-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tile-remove {
+  flex-shrink: 0;
+  padding: 1px 7px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ===== EVAL TABLE ===== */
+.eval-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.eval-table th,
+.eval-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.eval-table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg);
+}
+
+.eval-table tbody tr:hover {
+  background: var(--color-accent-bg);
+}
+
+/* ===== SIGNS LIST ===== */
+.signs-list-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.sign-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+/* ===== SAVE BAR ===== */
+.save-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ===== INLINE CODE ===== */
+.inline-code {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+/* ===== TRAINING ===== */
+.training-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.result-card {
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.result-success {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+}
+
+.result-error {
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+}
+
+.metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+  text-align: center;
+}
+
+.eval-section {
+  margin-top: 16px;
+}
+
+.eval-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.weighted-avg {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding: 8px 12px;
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.error-text {
+  color: var(--color-danger);
+  font-size: 14px;
+}
