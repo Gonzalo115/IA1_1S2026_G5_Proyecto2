@@ -70,6 +70,14 @@
             "sent": true,
             "status_code": 200,
             "created_at": "2026-05-01T18:02:55.030832"
+        },
+        {
+            "prediction": "Gracias",
+            "confidence": 0.42333333333333334,
+            "message": "HandTalk AI detecto: Gracias | confianza: 0.42333333333333334",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-05-01T20:12:28.817082"
         }
     ]
 }

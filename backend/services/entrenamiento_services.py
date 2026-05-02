@@ -12,6 +12,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from typing import Dict
 
+from services.s3_service import S3Service
+
 
 class EntrenaciontoService:
     """Servicio para entrenar modelo de detección de señas de mano"""
@@ -65,43 +67,42 @@ class EntrenaciontoService:
 
     def entrenar_modelo(self, ruta_dataset: str = "Data") -> Dict:
         try:
-            print("Iniciando entrenamiento del modelo...")
+            print("Iniciando entrenamiento del modelo desde S3...")
 
+            s3 = S3Service()
             X = []
             y = []
             conteo_clases = {}
-            extensiones_validas = (".jpg", ".jpeg", ".png")
-
-            if not os.path.exists(ruta_dataset):
-                return {
-                    "exito": False,
-                    "mensaje": f"La carpeta {ruta_dataset} no existe"
-                }
-
-            print(f"Leyendo imágenes de {ruta_dataset}...")
-
             etiquetas_encontradas = set()
 
-            for etiqueta in sorted(os.listdir(ruta_dataset)):
-                ruta_etiqueta = os.path.join(ruta_dataset, etiqueta)
+            categorias = s3.listar_categorias()
 
-                if not os.path.isdir(ruta_etiqueta):
-                    continue
+            if not categorias:
+                return {
+                    "exito": False,
+                    "mensaje": "No se encontraron categorias en el bucket S3."
+                }
 
+            print(f"Categorias encontradas en S3: {categorias}")
+
+            for etiqueta in sorted(categorias):
                 etiquetas_encontradas.add(etiqueta)
-                print(f"Procesando clasificación: {etiqueta}")
+                print(f"Procesando clasificacion: {etiqueta}")
 
-                for archivo in os.listdir(ruta_etiqueta):
-                    if not archivo.lower().endswith(extensiones_validas):
-                        continue
+                imagenes = s3.listar_imagenes(etiqueta)
 
-                    ruta_imagen = os.path.join(ruta_etiqueta, archivo)
+                for img_info in imagenes:
+                    archivo = img_info["nombre"]
+                    key = img_info["key"]
 
                     try:
-                        imagen = cv2.imread(ruta_imagen)
+                        datos = s3.descargar_imagen_bytes(key)
+
+                        buffer = np.frombuffer(datos, dtype=np.uint8)
+                        imagen = cv2.imdecode(buffer, cv2.IMREAD_COLOR)
 
                         if imagen is None:
-                            print(f"No se pudo leer la imagen: {ruta_imagen}")
+                            print(f"No se pudo decodificar la imagen: {archivo}")
                             continue
 
                         imagen_rgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
@@ -119,7 +120,7 @@ class EntrenaciontoService:
                             puntos = self.normalizar_landmarks(mano)
 
                             if len(puntos) != 63:
-                                print(f"Landmarks inválidos en: {archivo}")
+                                print(f"Landmarks invalidos en: {archivo}")
                                 continue
 
                             X.append(puntos)
@@ -127,7 +128,7 @@ class EntrenaciontoService:
 
                             conteo_clases[etiqueta] = conteo_clases.get(etiqueta, 0) + 1
                         else:
-                            print(f"No se detectó mano en: {ruta_imagen}")
+                            print(f"No se detecto mano en: {archivo}")
 
                     except Exception as e:
                         print(f"Error al procesar {archivo}: {str(e)}")

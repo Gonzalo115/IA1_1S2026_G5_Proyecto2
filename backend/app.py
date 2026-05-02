@@ -1,5 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from handtalk.inference_service import InferenceService
 from routes.predict_routes import predict_bp
@@ -7,6 +10,7 @@ from routes.rostro_routes import rostro_bp
 from services.predict_service import PredictService
 from routes.admin_routes import admin_bp
 from routes.entrenar_routes import entrenar_bp
+from routes.senas_routes import senas_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +23,7 @@ app.register_blueprint(rostro_bp)
 app.register_blueprint(predict_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(entrenar_bp)
+app.register_blueprint(senas_bp)
 
 @app.route("/", methods=["GET"])
 def inicio():

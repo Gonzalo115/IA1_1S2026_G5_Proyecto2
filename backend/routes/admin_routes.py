@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+import os
+import joblib
 from services.admin_service import AdminService
 from services.telegram_service import TelegramService
 
@@ -26,6 +28,23 @@ def update_config():
         "message": "Configuración administrativa actualizada correctamente",
         "config": updated_config
     }), 200
+
+
+@admin_bp.route("/modelo/clases", methods=["GET"])
+def get_modelo_clases():
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    modelo_path = os.path.join(base_dir, "models", "modelo_manos.pkl")
+    if not os.path.isfile(modelo_path):
+        return jsonify({"clases": [], "entrenado": False}), 200
+    try:
+        paquete = joblib.load(modelo_path)
+        if isinstance(paquete, dict):
+            clases = paquete.get("metadata", {}).get("etiquetas", [])
+        else:
+            clases = list(paquete.classes_)
+        return jsonify({"clases": sorted(clases), "entrenado": True}), 200
+    except Exception as e:
+        return jsonify({"clases": [], "entrenado": False, "error": str(e)}), 200
 
 
 @admin_bp.route("/history", methods=["GET"])
