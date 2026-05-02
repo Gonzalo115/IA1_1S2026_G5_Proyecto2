@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "http://localhost:8000";
 
 // Conexiones de MediaPipe entre los 21 landmarks de la mano
 const HAND_CONNECTIONS: [number, number][] = [
