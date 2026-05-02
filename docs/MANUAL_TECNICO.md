@@ -21,16 +21,16 @@ El proyecto esta dividido en dos aplicaciones principales:
 
 ### 2.1 Modulos principales
 
-| Modulo | Ubicacion | Responsabilidad |
-| --- | --- | --- |
-| Aplicacion Flask | `backend/app.py` | Crea la API, habilita CORS, registra rutas e inicializa servicios. |
-| Rutas HTTP | `backend/routes/` | Define endpoints para prediccion, administracion, entrenamiento, señas y rostros. |
-| Controladores | `backend/controllers/` | Valida entradas HTTP y delega la logica a los servicios. |
-| Servicios de negocio | `backend/services/` | Contiene la logica de deteccion, entrenamiento, S3, configuracion y Telegram. |
-| Vision HandTalk | `backend/handtalk/` | Contiene utilidades de inferencia, camara, deteccion de mano y extraccion de features. |
-| Modelo entrenado | `backend/models/modelo_manos.pkl` | Archivo serializado con joblib. Guarda el clasificador y metadata. |
-| Configuracion admin | `backend/config/admin_config.json` | Guarda umbral de confianza, formato de mensaje y historial. |
-| Cliente web | `frontend/src/` | Interfaz de usuario y administrador. Consume la API del backend. |
+| Modulo               | Ubicacion                          | Responsabilidad                                                                        |
+| -------------------- | ---------------------------------- | -------------------------------------------------------------------------------------- |
+| Aplicacion Flask     | `backend/app.py`                   | Crea la API, habilita CORS, registra rutas e inicializa servicios.                     |
+| Rutas HTTP           | `backend/routes/`                  | Define endpoints para prediccion, administracion, entrenamiento, señas y rostros.      |
+| Controladores        | `backend/controllers/`             | Valida entradas HTTP y delega la logica a los servicios.                               |
+| Servicios de negocio | `backend/services/`                | Contiene la logica de deteccion, entrenamiento, S3, configuracion y Telegram.          |
+| Vision HandTalk      | `backend/handtalk/`                | Contiene utilidades de inferencia, camara, deteccion de mano y extraccion de features. |
+| Modelo entrenado     | `backend/models/modelo_manos.pkl`  | Archivo serializado con joblib. Guarda el clasificador y metadata.                     |
+| Configuracion admin  | `backend/config/admin_config.json` | Guarda umbral de confianza, formato de mensaje y historial.                            |
+| Cliente web          | `frontend/src/`                    | Interfaz de usuario y administrador. Consume la API del backend.                       |
 
 ### 2.2 Flujo general de uso
 
@@ -194,11 +194,11 @@ El dataset no esta guardado localmente en el repositorio. El proyecto usa AWS S3
 
 Configuracion por defecto en `backend/services/s3_service.py`:
 
-| Variable | Valor por defecto | Descripcion |
-| --- | --- | --- |
+| Variable         | Valor por defecto            | Descripcion                      |
+| ---------------- | ---------------------------- | -------------------------------- |
 | `S3_BUCKET_NAME` | `img-entramiento-ia1-grupo5` | Bucket donde estan las imagenes. |
-| `S3_DATA_PREFIX` | `Data/` | Carpeta base del dataset. |
-| `AWS_REGION` | `us-east-2` | Region AWS. |
+| `S3_DATA_PREFIX` | `Data/`                      | Carpeta base del dataset.        |
+| `AWS_REGION`     | `us-east-2`                  | Region AWS.                      |
 
 En la siguiente captura se observa el bucket usado para el dataset de entrenamiento. Dentro de la carpeta `Data/` hay subcarpetas por clase, por ejemplo `Adios`, `Bien`, `Como Estas`, `Dibujo`, `Entendido`, `Gracias`, `Hola`, `Mal` y `Musica`.
 
@@ -265,23 +265,23 @@ El archivo guarda:
 
 ## 5. Tecnologias utilizadas (OpenCV, MediaPipe, scikit-learn, etc.)
 
-| Tecnologia | Uso |
-| --- | --- |
-| Python | Lenguaje principal del backend. |
-| Flask | API REST. |
-| Flask-CORS | Permite llamadas desde el frontend. |
-| OpenCV | Decodificacion de imagenes, webcam y procesamiento visual. |
-| MediaPipe | Deteccion de landmarks de mano. |
-| NumPy | Manejo de arreglos numericos. |
-| scikit-learn | Entrenamiento y prediccion del modelo. |
-| joblib | Carga y guardado del modelo `.pkl`. |
-| boto3 | Conexion con AWS S3. |
-| requests | Envio de mensajes a Telegram. |
-| React | Interfaz web. |
-| TypeScript | Tipado del frontend. |
-| Vite | Servidor de desarrollo y build del frontend. |
-| AWS S3 | Almacenamiento del dataset. |
-| Telegram Bot API | Envio de mensajes con predicciones. |
+| Tecnologia       | Uso                                                        |
+| ---------------- | ---------------------------------------------------------- |
+| Python           | Lenguaje principal del backend.                            |
+| Flask            | API REST.                                                  |
+| Flask-CORS       | Permite llamadas desde el frontend.                        |
+| OpenCV           | Decodificacion de imagenes, webcam y procesamiento visual. |
+| MediaPipe        | Deteccion de landmarks de mano.                            |
+| NumPy            | Manejo de arreglos numericos.                              |
+| scikit-learn     | Entrenamiento y prediccion del modelo.                     |
+| joblib           | Carga y guardado del modelo `.pkl`.                        |
+| boto3            | Conexion con AWS S3.                                       |
+| requests         | Envio de mensajes a Telegram.                              |
+| React            | Interfaz web.                                              |
+| TypeScript       | Tipado del frontend.                                       |
+| Vite             | Servidor de desarrollo y build del frontend.               |
+| AWS S3           | Almacenamiento del dataset.                                |
+| Telegram Bot API | Envio de mensajes con predicciones.                        |
 
 ## 6. Instrucciones de instalacion y ejecucion (entorno, dependencias)
 
@@ -376,20 +376,196 @@ frontend/src/api/client.ts
 
 ## 7. Endpoints principales
 
-| Metodo | Ruta | Descripcion |
-| --- | --- | --- |
-| `GET` | `/` | Verifica que la API esta activa. |
-| `POST` | `/analizar` | Recibe una imagen y predice la seña de mano. |
-| `GET` | `/predict` | Flujo alterno: captura desde webcam del servidor. |
-| `GET` | `/api/admin/config` | Obtiene configuracion administrativa. |
-| `PUT` | `/api/admin/config` | Actualiza umbral, Telegram y formato de mensaje. |
-| `GET` | `/api/admin/modelo/clases` | Lista clases del modelo entrenado. |
-| `GET` | `/api/admin/history` | Obtiene historial de mensajes. |
-| `POST` | `/api/admin/telegram/test` | Envia prediccion a Telegram. |
-| `POST` | `/api/entreanar/` | Inicia entrenamiento del modelo. |
-| `GET` | `/api/señas/` | Lista categorias en S3. |
-| `POST` | `/api/señas/` | Crea una categoria. |
-| `DELETE` | `/api/señas/{nombre}` | Elimina una categoria. |
-| `GET` | `/api/señas/{categoria}/imagenes` | Lista imagenes de una categoria. |
-| `POST` | `/api/señas/{categoria}/imagenes` | Sube una imagen. |
-| `DELETE` | `/api/señas/{categoria}/imagenes/{archivo}` | Elimina una imagen. |
+| Metodo   | Ruta                                        | Descripcion                                       |
+| -------- | ------------------------------------------- | ------------------------------------------------- |
+| `GET`    | `/`                                         | Verifica que la API esta activa.                  |
+| `POST`   | `/analizar`                                 | Recibe una imagen y predice la seña de mano.      |
+| `GET`    | `/predict`                                  | Flujo alterno: captura desde webcam del servidor. |
+| `GET`    | `/api/admin/config`                         | Obtiene configuracion administrativa.             |
+| `PUT`    | `/api/admin/config`                         | Actualiza umbral, Telegram y formato de mensaje.  |
+| `GET`    | `/api/admin/modelo/clases`                  | Lista clases del modelo entrenado.                |
+| `GET`    | `/api/admin/history`                        | Obtiene historial de mensajes.                    |
+| `POST`   | `/api/admin/telegram/test`                  | Envia prediccion a Telegram.                      |
+| `POST`   | `/api/entreanar/`                           | Inicia entrenamiento del modelo.                  |
+| `GET`    | `/api/señas/`                               | Lista categorias en S3.                           |
+| `POST`   | `/api/señas/`                               | Crea una categoria.                               |
+| `DELETE` | `/api/señas/{nombre}`                       | Elimina una categoria.                            |
+| `GET`    | `/api/señas/{categoria}/imagenes`           | Lista imagenes de una categoria.                  |
+| `POST`   | `/api/señas/{categoria}/imagenes`           | Sube una imagen.                                  |
+| `DELETE` | `/api/señas/{categoria}/imagenes/{archivo}` | Elimina una imagen.                               |
+
+## 8. Entrenamiento del modelo
+
+### 1. Descripción General
+
+El modelo tiene como objetivo clasificar señas de mano a partir de imágenes. Para ello, se utiliza MediaPipe para la extracción de características (landmarks) y un modelo de Machine Learning (Random Forest) para la clasificación.
+
+El entrenamiento se realiza a partir de imágenes almacenadas en un bucket de Amazon S3.
+
+---
+
+### 2. Fuente de Datos
+
+- Las imágenes se obtienen dinámicamente desde un bucket de S3.
+- Cada carpeta dentro del bucket representa una categoría o etiqueta.
+
+```python
+s3 = S3Service()
+categorias = s3.listar_categorias()
+
+for etiqueta in categorias:
+    imagenes = s3.listar_imagenes(etiqueta)
+```
+
+---
+
+### 3. Extracción de Características
+
+#### 3.1 Detección de Mano
+
+```python
+mp_image = mp.Image(
+    image_format=mp.ImageFormat.SRGB,
+    data=imagen_rgb
+)
+
+resultado = self.detector.detect(mp_image)
+```
+
+#### 3.2 Generación de Features
+
+```python
+if resultado.hand_landmarks:
+    mano = resultado.hand_landmarks[0]
+    puntos = self.normalizar_landmarks(mano)
+```
+
+#### 3.3 Normalización
+
+```python
+def normalizar_landmarks(self, mano):
+    base_x = mano[0].x
+    base_y = mano[0].y
+    base_z = mano[0].z
+
+    puntos = []
+
+    for p in mano:
+        puntos.extend([
+            p.x - base_x,
+            p.y - base_y,
+            p.z - base_z
+        ])
+
+    return puntos
+```
+
+---
+
+### 4. Construcción del Dataset
+
+```python
+X = []
+y = []
+
+X.append(puntos)
+y.append(etiqueta)
+```
+
+Validaciones:
+
+```python
+if imagen is None:
+    continue
+
+if not resultado.hand_landmarks:
+    continue
+
+if len(puntos) != 63:
+    continue
+```
+
+---
+
+### 5. División de Datos
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.3,
+    random_state=42,
+    stratify=y if usar_stratify else None
+)
+```
+
+---
+
+### 6. Modelo Utilizado
+
+```python
+self.modelo = RandomForestClassifier(
+    n_estimators=300,
+    max_depth=None,
+    random_state=42,
+    n_jobs=-1,
+    class_weight="balanced"
+)
+```
+
+---
+
+### 7. Entrenamiento
+
+```python
+self.modelo.fit(X_train, y_train)
+```
+
+---
+
+### 8. Evaluación
+
+```python
+predicciones = self.modelo.predict(X_test)
+accuracy = accuracy_score(y_test, predicciones)
+```
+
+```python
+reporte = classification_report(
+    y_test,
+    predicciones,
+    output_dict=True,
+    zero_division=0
+)
+```
+
+---
+
+### 9. Guardado del Modelo
+
+```python
+paquete_modelo = {
+    "modelo": self.modelo,
+    "metadata": metadata
+}
+
+joblib.dump(paquete_modelo, self.modelo_path)
+```
+
+---
+
+### 10. Flujo General
+
+```python
+for etiqueta in categorias:
+    for imagen in imagenes:
+        detectar_mano()
+        extraer_landmarks()
+        normalizar()
+        guardar_en_dataset()
+
+dividir_datos()
+entrenar_modelo()
+evaluar_modelo()
+guardar_modelo()
+```
