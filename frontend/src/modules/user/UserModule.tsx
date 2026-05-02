@@ -2,15 +2,39 @@ import { useRef, useCallback, useEffect, useState } from "react";
 import "./UserModule.css";
 import ConfidenceBar from "../../components/ConfidenceBar/ConfidenceBar";
 import { detectarMano } from "../../api/detection";
-import { sendTelegramMessage, getHistory, getModeloClases } from "../../api/admin";
-import type { AdminConfig, DetectionResult, HistoryItem, Landmark } from "../../types";
+import {
+  sendTelegramMessage,
+  getHistory,
+  getModeloClases,
+} from "../../api/admin";
+import type {
+  AdminConfig,
+  DetectionResult,
+  HistoryItem,
+  Landmark,
+} from "../../types";
 
 const HAND_CONNECTIONS: [number, number][] = [
-  [0, 1], [1, 2], [2, 3], [3, 4],
-  [0, 5], [5, 6], [6, 7], [7, 8],
-  [5, 9], [9, 10], [10, 11], [11, 12],
-  [9, 13], [13, 14], [14, 15], [15, 16],
-  [13, 17], [17, 18], [18, 19], [19, 20],
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [3, 4],
+  [0, 5],
+  [5, 6],
+  [6, 7],
+  [7, 8],
+  [5, 9],
+  [9, 10],
+  [10, 11],
+  [11, 12],
+  [9, 13],
+  [13, 14],
+  [14, 15],
+  [15, 16],
+  [13, 17],
+  [17, 18],
+  [18, 19],
+  [19, 20],
   [0, 17],
 ];
 
@@ -113,13 +137,17 @@ export default function UserModule({ config }: Props) {
         setCameraActive(true);
       }
     } catch {
-      alert("No se pudo acceder a la cámara. Verifica los permisos del navegador.");
+      alert(
+        "No se pudo acceder a la cámara. Verifica los permisos del navegador.",
+      );
     }
   }, []);
 
   const stopCamera = useCallback(() => {
     if (videoRef.current?.srcObject) {
-      (videoRef.current.srcObject as MediaStream).getTracks().forEach((t) => t.stop());
+      (videoRef.current.srcObject as MediaStream)
+        .getTracks()
+        .forEach((t) => t.stop());
       videoRef.current.srcObject = null;
     }
     setCameraActive(false);
@@ -142,23 +170,36 @@ export default function UserModule({ config }: Props) {
       canvas.height = video.videoHeight;
       ctx.drawImage(video, 0, 0);
 
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-        analyzingRef.current = true;
-        try {
-          const data = await detectarMano(blob);
-          setDetection(data);
-          if (data.exito && data.landmarks) {
-            drawLandmarks(data.landmarks);
-          } else {
-            clearOverlay();
+      canvas.toBlob(
+        async (blob) => {
+          if (!blob) return;
+          analyzingRef.current = true;
+          try {
+            const data = await detectarMano(blob);
+
+            if (data.exito) {
+              setDetection(data);
+
+              if (data.landmarks) {
+                drawLandmarks(data.landmarks);
+              }
+            } else {
+              clearOverlay();
+            }
+            if (data.exito && data.landmarks) {
+              drawLandmarks(data.landmarks);
+            } else {
+              clearOverlay();
+            }
+          } catch {
+            /* network error */
+          } finally {
+            analyzingRef.current = false;
           }
-        } catch {
-          /* network error */
-        } finally {
-          analyzingRef.current = false;
-        }
-      }, "image/jpeg", 0.8);
+        },
+        "image/jpeg",
+        0.8,
+      );
     }, 500);
 
     return () => clearInterval(interval);
@@ -169,7 +210,10 @@ export default function UserModule({ config }: Props) {
     setTelegramSending(true);
     setTelegramStatus(null);
     try {
-      const data = await sendTelegramMessage(detection.prediccion, detection.confianza);
+      const data = await sendTelegramMessage(
+        detection.prediccion,
+        detection.confianza,
+      );
       if (data.sent) {
         setTelegramStatus("Mensaje enviado correctamente");
       } else {
@@ -224,8 +268,10 @@ export default function UserModule({ config }: Props) {
                 className="camera-video"
                 onLoadedMetadata={() => {
                   if (captureCanvasRef.current && videoRef.current) {
-                    captureCanvasRef.current.width = videoRef.current.videoWidth;
-                    captureCanvasRef.current.height = videoRef.current.videoHeight;
+                    captureCanvasRef.current.width =
+                      videoRef.current.videoWidth;
+                    captureCanvasRef.current.height =
+                      videoRef.current.videoHeight;
                   }
                 }}
               />
@@ -241,8 +287,8 @@ export default function UserModule({ config }: Props) {
             <canvas ref={captureCanvasRef} style={{ display: "none" }} />
 
             <p className="camera-note">
-              Los puntos muestran los 21 landmarks de MediaPipe extraídos de la mano.
-              Se envía un frame al backend cada 500 ms para la predicción.
+              Los puntos muestran los 21 landmarks de MediaPipe extraídos de la
+              mano. Se envía un frame al backend cada 500 ms para la predicción.
             </p>
           </div>
         </div>
@@ -262,7 +308,9 @@ export default function UserModule({ config }: Props) {
 
             {detection?.exito ? (
               <div className="prediction-display">
-                <div className={`prediction-word ${aboveThreshold ? "word-valid" : "word-invalid"}`}>
+                <div
+                  className={`prediction-word ${aboveThreshold ? "word-valid" : "word-invalid"}`}
+                >
                   {detection.prediccion}
                 </div>
                 <ConfidenceBar value={detection.confianza!} />
@@ -273,18 +321,26 @@ export default function UserModule({ config }: Props) {
                 )}
                 <button
                   className="btn btn-primary"
-                  disabled={!aboveThreshold || telegramSending || !config?.telegram_enabled}
+                  disabled={
+                    !aboveThreshold ||
+                    telegramSending ||
+                    !config?.telegram_enabled
+                  }
                   onClick={handleSendTelegram}
                 >
                   {telegramSending ? "Enviando..." : "Enviar a Telegram"}
                 </button>
                 {!config?.telegram_enabled && (
-                  <p className="disabled-note">Bot de Telegram desactivado por el administrador</p>
+                  <p className="disabled-note">
+                    Bot de Telegram desactivado por el administrador
+                  </p>
                 )}
                 {telegramStatus && (
                   <p
                     className={`status-msg ${
-                      telegramStatus.startsWith("Mensaje") ? "status-success" : "status-error"
+                      telegramStatus.startsWith("Mensaje")
+                        ? "status-success"
+                        : "status-error"
                     }`}
                   >
                     {telegramStatus}
@@ -294,7 +350,8 @@ export default function UserModule({ config }: Props) {
             ) : (
               <div className="empty-state">
                 <p>
-                  {detection?.mensaje ?? "Muestra una mano a la cámara para detectar una seña."}
+                  {detection?.mensaje ??
+                    "Muestra una mano a la cámara para detectar una seña."}
                 </p>
               </div>
             )}
@@ -320,7 +377,9 @@ export default function UserModule({ config }: Props) {
               </div>
               <div className="feature-stat-item">
                 <span className="feature-stat-val">
-                  {detection?.exito ? (detection.landmarks?.length ?? 0) * 2 : 0}
+                  {detection?.exito
+                    ? (detection.landmarks?.length ?? 0) * 2
+                    : 0}
                 </span>
                 <span className="feature-stat-lbl">Características</span>
               </div>
@@ -334,7 +393,10 @@ export default function UserModule({ config }: Props) {
 
             {topClases.length > 0 && (
               <>
-                <p className="field-label" style={{ marginBottom: "8px", marginTop: "12px" }}>
+                <p
+                  className="field-label"
+                  style={{ marginBottom: "8px", marginTop: "12px" }}
+                >
                   Probabilidades por clase (top 5)
                 </p>
                 <div className="class-list">
@@ -344,12 +406,16 @@ export default function UserModule({ config }: Props) {
                       <div className="class-bar-track">
                         <div
                           className={`class-bar-fill ${
-                            cls === detection?.prediccion ? "class-bar-active" : ""
+                            cls === detection?.prediccion
+                              ? "class-bar-active"
+                              : ""
                           }`}
                           style={{ width: `${Math.round(conf * 100)}%` }}
                         />
                       </div>
-                      <span className="class-pct">{(conf * 100).toFixed(1)}%</span>
+                      <span className="class-pct">
+                        {(conf * 100).toFixed(1)}%
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -358,7 +424,8 @@ export default function UserModule({ config }: Props) {
 
             {!detection?.exito && (
               <p className="empty-note" style={{ marginTop: "8px" }}>
-                Activa la cámara y muestra una mano para ver las características extraídas.
+                Activa la cámara y muestra una mano para ver las características
+                extraídas.
               </p>
             )}
           </div>
@@ -409,7 +476,8 @@ export default function UserModule({ config }: Props) {
         <div className="signs-tiles-grid">
           {!modeloEntrenado ? (
             <p className="empty-note">
-              El modelo aún no ha sido entrenado. El administrador debe iniciar el entrenamiento desde el Módulo Administrador.
+              El modelo aún no ha sido entrenado. El administrador debe iniciar
+              el entrenamiento desde el Módulo Administrador.
             </p>
           ) : clasesModelo.length === 0 ? (
             <p className="empty-note">
@@ -420,7 +488,9 @@ export default function UserModule({ config }: Props) {
               <div
                 key={sign}
                 className={`sign-user-tile ${
-                  detection?.prediccion === sign && aboveThreshold ? "sign-tile-active" : ""
+                  detection?.prediccion === sign && aboveThreshold
+                    ? "sign-tile-active"
+                    : ""
                 }`}
               >
                 <span className="sign-tile-name">{sign}</span>

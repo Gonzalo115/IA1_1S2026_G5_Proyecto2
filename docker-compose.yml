@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: paoalonzo/handtalk-backend:latest
+    container_name: handtalk-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      # Persistir el modelo entrenado fuera del contenedor
+      - modelo_data:/app/models
+      # Persistir la configuracion del admin
+      - ./backend/config:/app/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Cambia esta URL por la IP o dominio publico de tu backend en la nube
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:8000}
+    image: paoalonzo/handtalk-frontend:latest
+    container_name: handtalk-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  # Volumen nombrado para persistir el modelo entrenado entre reinicios
+  modelo_data:
