@@ -1,0 +1,14 @@
+# HandTalk AI — Backend Flask (http://localhost:5000)
+# Arranca el servidor antes: cd backend && python app.py
+#
+# VS Code REST Client / Cursor HTTP runner
+
+###
+# Health check: API activa y resumen de endpoints (JSON).
+GET http://localhost:5000/
+
+
+###
+# Predicción: un frame desde la webcam del SERVIDOR → MediaPipe + modelo.
+# Respuestas posibles (siempre HTTP 200): {"raw":..., "stable":...} o {"error":"..."}
+GET http://localhost:5000/predict

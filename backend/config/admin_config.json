@@ -1,0 +1,83 @@
+{
+    "telegram_enabled": true,
+    "telegram_message_format": "HandTalk AI detecto: {prediction} | confianza: {confidence}",
+    "confidence_threshold": 0.15,
+    "available_signs": [
+        "hola",
+        "adios"
+    ],
+    "message_history": [
+        {
+            "prediction": "hola",
+            "confidence": 0.95,
+            "message": "Se detectó la seña: hola",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T00:18:18.706249"
+        },
+        {
+            "prediction": "hola",
+            "confidence": 0.95,
+            "message": "Se detectó la seña: hola",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T00:18:31.687495"
+        },
+        {
+            "prediction": "hola",
+            "confidence": 0.95,
+            "message": "HandTalk AI detecto: hola | confianza: 0.95",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T00:20:30.432506"
+        },
+        {
+            "prediction": "5",
+            "confidence": null,
+            "message": "HandTalk AI detecto: 5 | confianza: N/A",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-04-27T23:24:37.438441"
+        },
+        {
+            "prediction": "Dibujo",
+            "confidence": 0.43333333333333335,
+            "message": "HandTalk AI detecto: Dibujo | confianza: 0.43333333333333335",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-05-01T18:01:27.872695"
+        },
+        {
+            "prediction": "Musica",
+            "confidence": 0.42333333333333334,
+            "message": "HandTalk AI detecto: Musica | confianza: 0.42333333333333334",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-05-01T18:02:10.458883"
+        },
+        {
+            "prediction": "Adios",
+            "confidence": 0.5433333333333333,
+            "message": "HandTalk AI detecto: Adios | confianza: 0.5433333333333333",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-05-01T18:02:42.045819"
+        },
+        {
+            "prediction": "Entendido",
+            "confidence": 0.44333333333333336,
+            "message": "HandTalk AI detecto: Entendido | confianza: 0.44333333333333336",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-05-01T18:02:55.030832"
+        },
+        {
+            "prediction": "Gracias",
+            "confidence": 0.42333333333333334,
+            "message": "HandTalk AI detecto: Gracias | confianza: 0.42333333333333334",
+            "sent": true,
+            "status_code": 200,
+            "created_at": "2026-05-01T20:12:28.817082"
+        }
+    ]
+}

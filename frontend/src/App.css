@@ -1,0 +1,14 @@
+/* ===== APP SHELL LAYOUT ===== */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 32px 36px;
+  max-width: calc(100vw - var(--sidebar-width));
+  overflow-x: hidden;
+  min-height: 100vh;
+}
